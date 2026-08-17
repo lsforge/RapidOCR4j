@@ -1,0 +1,35 @@
+src/main/java/io/github/lsforge/RapidOCR.java
+  s_e5c56dc7ad835e::t_689e1b3536d6a2 1-604
+src/main/java/io/github/lsforge/cal_rec_boxes/CalRecBoxes.java
+  s_e5c56dc7ad835e::t_cb00a829108b9f 1-400
+src/main/java/io/github/lsforge/ch_ppocr_cls/ClsPostProcess.java
+  s_e5c56dc7ad835e::t_b86a6c8b3e90bd 1-39
+src/main/java/io/github/lsforge/ch_ppocr_cls/TextClassifier.java
+  s_e5c56dc7ad835e::t_fb38d96ab838f8 1-219
+src/main/java/io/github/lsforge/ch_ppocr_det/DBPostProcess.java
+  s_e5c56dc7ad835e::t_633a00a97648a8 1-485
+src/main/java/io/github/lsforge/ch_ppocr_det/DetPreProcess.java
+  s_e5c56dc7ad835e::t_1197f2c7896595 1-156
+src/main/java/io/github/lsforge/ch_ppocr_det/TextDetector.java
+  s_e5c56dc7ad835e::t_497a9e8f81fb31 1-228
+src/main/java/io/github/lsforge/ch_ppocr_rec/CTCLabelDecode.java
+  s_e5c56dc7ad835e::t_9e72eddb7f3e5a 1-397
+src/main/java/io/github/lsforge/ch_ppocr_rec/TextRecognizer.java
+  s_e5c56dc7ad835e::t_e4d683df729dce 1-227
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "7e16deba64de38e5ea1cbf6e094f3cb7d0ef740f",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "unknown"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
