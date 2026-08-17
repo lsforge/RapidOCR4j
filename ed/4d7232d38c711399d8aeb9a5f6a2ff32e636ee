@@ -1,0 +1,29 @@
+src/main/java/io/github/lsforge/utils/LoadImage.java
+  s_e5c56dc7ad835e::t_147169a2a41b2c 1-323
+src/main/java/io/github/lsforge/utils/ProcessImg.java
+  s_e5c56dc7ad835e::t_3b3c9c3c00c727 1-82
+src/main/java/io/github/lsforge/utils/VisRes.java
+  s_e5c56dc7ad835e::t_52ce75933dc5f8 1-262
+src/main/java/io/github/lsforge/utils/WordBoxMerger.java
+  s_e5c56dc7ad835e::t_147117e9a83723 1-109
+src/main/java/io/github/lsforge/utils/OpencvLoader.java
+  s_e5c56dc7ad835e::t_333da1479d1450 1-63
+src/main/java/io/github/lsforge/utils/OrtInferSession.java
+  s_e5c56dc7ad835e::t_a92209e63cb75f 1-296
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "ed4d7232d38c711399d8aeb9a5f6a2ff32e636ee",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "glm-5.3"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
