@@ -1,0 +1,21 @@
+LICENSE
+  s_e5c56dc7ad835e::t_b9e608898ad5b2 1-201
+README.md
+  s_e5c56dc7ad835e::t_d577fd4f2925ab 1-211
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "0ceacc15665e807ace14cf68c9f297f48f54db2d",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "unknown"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
