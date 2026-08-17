@@ -1,0 +1,21 @@
+pom.xml
+  s_e5c56dc7ad835e::t_3d8c176d7ebbbe 1-164
+.gitignore
+  s_e5c56dc7ad835e::t_09893534ec8875 1-35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "c58a38cbb90b898cd122f465dba2c42dda764d67",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "glm-5.3"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
