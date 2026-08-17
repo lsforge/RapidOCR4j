@@ -1,0 +1,39 @@
+src/main/java/io/github/lsforge/entity/FlatTensor.java
+  s_e5c56dc7ad835e::t_73708aa2683d31 1-21
+src/main/java/io/github/lsforge/entity/OcrResult.java
+  s_e5c56dc7ad835e::t_92addae2ba251c 1-39
+src/main/java/io/github/lsforge/entity/Pair.java
+  s_e5c56dc7ad835e::t_292847f81296e5 1-52
+src/main/java/io/github/lsforge/entity/ParamConfig.java
+  s_e5c56dc7ad835e::t_ad10c96adbb695 1-15
+src/main/java/io/github/lsforge/entity/RecResult.java
+  s_e5c56dc7ad835e::t_2123bc0ab950cb 1-31
+src/main/java/io/github/lsforge/entity/Triple.java
+  s_e5c56dc7ad835e::t_275e3d4566ad02 1-60
+src/main/java/io/github/lsforge/entity/WordBoxInfo.java
+  s_e5c56dc7ad835e::t_268d08aff843a5 1-33
+src/main/java/io/github/lsforge/entity/WordBoxResult.java
+  s_e5c56dc7ad835e::t_57cabc6bc158ed 1-29
+src/main/java/io/github/lsforge/entity/OcrConfig.java
+  s_e5c56dc7ad835e::t_14653a9eb1b4e8 1-71
+src/main/java/io/github/lsforge/entity/OrtInferConfig.java
+  s_e5c56dc7ad835e::t_6dd47df415b49c 1-29
+src/main/java/io/github/lsforge/entity/TupleResult.java
+  s_e5c56dc7ad835e::t_aa9c6139de8bd9 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "6475352bea48e32fd71b6b92ae515d8e2417c280",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "glm-5.3"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
