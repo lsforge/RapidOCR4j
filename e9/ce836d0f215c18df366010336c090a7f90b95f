@@ -1,0 +1,31 @@
+src/test/java/io/github/lsforge/OcrIntegrationTest.java
+  s_e5c56dc7ad835e::t_25b7e9c9c8db44 1-144
+src/test/java/io/github/lsforge/PythonBaselineParityTest.java
+  s_e5c56dc7ad835e::t_b1e5ba617dcffe 1-179
+src/test/java/io/github/lsforge/RapidOCRUnitTest.java
+  s_e5c56dc7ad835e::t_8576fa938fe6d8 1-120
+src/test/java/io/github/lsforge/utils/LoadImageTest.java
+  s_e5c56dc7ad835e::t_1f1e0d2204cb51 1-94
+src/test/java/io/github/lsforge/utils/ProcessImgTest.java
+  s_e5c56dc7ad835e::t_93ceccf5fdc528 1-63
+src/test/java/io/github/lsforge/utils/WordBoxMergerTest.java
+  s_e5c56dc7ad835e::t_92cb0b0fdd706c 1-95
+src/test/java/io/github/lsforge/Benchmark.java
+  s_e5c56dc7ad835e::t_b92e5f12e06e5d 1-190
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "e9ce836d0f215c18df366010336c090a7f90b95f",
+  "prompts": {},
+  "sessions": {
+    "s_e5c56dc7ad835e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f956d48b-7ba2-480e-8064-b890e4c04b33",
+        "model": "glm-5.3"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
