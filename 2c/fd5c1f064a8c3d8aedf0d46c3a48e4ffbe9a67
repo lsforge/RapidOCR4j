@@ -1,0 +1,39 @@
+src/main/java/de/lighti/clipper/Clipper.java
+  s_2480f68e62870d::t_5087034e2cb922 1-54
+src/main/java/de/lighti/clipper/ClipperBase.java
+  s_2480f68e62870d::t_69f781e92fbf82 1-691
+src/main/java/de/lighti/clipper/ClipperOffset.java
+  s_2480f68e62870d::t_5bb07d8e8fbb60 1-481
+src/main/java/de/lighti/clipper/DefaultClipper.java
+  s_2480f68e62870d::t_d220d6940f96bf 1-2518
+src/main/java/de/lighti/clipper/Edge.java
+  s_2480f68e62870d::t_6c7a9a85d6c13f 1-339
+src/main/java/de/lighti/clipper/LongRect.java
+  s_2480f68e62870d::t_a9e82da70e378f 1-26
+src/main/java/de/lighti/clipper/Path.java
+  s_2480f68e62870d::t_4af5fd640b6132 1-414
+src/main/java/de/lighti/clipper/Paths.java
+  s_2480f68e62870d::t_6948577d791bb2 1-125
+src/main/java/de/lighti/clipper/Point.java
+  s_2480f68e62870d::t_bf84505c05adc1 1-220
+src/main/java/de/lighti/clipper/PolyNode.java
+  s_2480f68e62870d::t_0a066a019aa828 1-116
+src/main/java/de/lighti/clipper/PolyTree.java
+  s_2480f68e62870d::t_7f472f6767ea21 1-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.16",
+  "base_commit_sha": "2cfd5c1f064a8c3d8aedf0d46c3a48e4ffbe9a67",
+  "prompts": {},
+  "sessions": {
+    "s_2480f68e62870d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cebea77a-3790-479e-aabf-d489d90bf2ac",
+        "model": "unknown"
+      },
+      "human_author": "lishuai1 <li.shuai1@cesgroup.com.cn>"
+    }
+  }
+}
