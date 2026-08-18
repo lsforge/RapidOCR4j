@@ -15,16 +15,21 @@
 
     <developers>
         <developer>
+            <id>lsforge</id>
             <name>lsforge</name>
             <email>309312339@qq.com</email>
             <timezone>+8</timezone>
+            <roles>
+                <role>Project Manager</role>
+                <role>Developer</role>
+            </roles>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/lsforge/RapidOCR4j.git</connection>
+        <connection>https://gitclone.com/github.com/lsforge/RapidOCR4j.git</connection>
         <developerConnection>scm:git:ssh://github.com/lsforge/RapidOCR4j.git</developerConnection>
-        <url>https://github.com/lsforge/RapidOCR4j/tree/main</url>
+        <url>https://github.com/lsforge/RapidOCR4j</url>
     </scm>
 
     <properties>
@@ -124,6 +129,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.2.8</version>
+                <configuration>
+                    <executable>C:\Program Files\GnuPG\bin\gpg.exe</executable>
+                    <keyname>lsforge</keyname>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -141,7 +150,7 @@
                 <version>0.11.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <publishingServerId>central</publishingServerId>
+                    <publishingServerId>lsforge</publishingServerId>
                     <checksums>required</checksums>
                     <deploymentName>rapidocr4j</deploymentName>
                 </configuration>
