@@ -22,14 +22,14 @@
 <dependency>
     <groupId>io.github.lsforge</groupId>
     <artifactId>rapidocr4j</artifactId>
-    <version>3.9.2</version>
+    <version>3.10.0</version>
 </dependency>
 ```
 
 **Gradle**
 
 ```groovy
-implementation 'io.github.lsforge:rapidocr4j:3.9.2'
+implementation 'io.github.lsforge:rapidocr4j:3.10.0'
 ```
 
 **Hello World**
@@ -152,7 +152,7 @@ config.Global.setIntraOpNumThreads(4);  // 例：16 核机器并发 4 路 → �
 <dependency>
     <groupId>io.github.lsforge</groupId>
     <artifactId>rapidocr4j</artifactId>
-    <version>3.9.2</version>
+    <version>3.10.0</version>
     <exclusions>
         <exclusion>
             <groupId>com.microsoft.onnxruntime</groupId>

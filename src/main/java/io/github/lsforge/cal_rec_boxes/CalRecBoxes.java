@@ -10,6 +10,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -109,6 +110,16 @@ public class CalRecBoxes {
         List<String> stateList = recWordInfo.getStateList();
         List<Float> confList = recWordInfo.getConfList();
 
+        // word 置信度取自身条目（对齐 Python b40c0f8）；缺失时以行均值兜底
+        List<List<Float>> charConfsList = recWordInfo.getCharConfs();
+        if (charConfsList == null || charConfsList.isEmpty()) {
+            float lineMean = (float) confList.stream().mapToDouble(Float::doubleValue).average().orElse(0.0);
+            charConfsList = new ArrayList<>(wordList.size());
+            for (List<String> word : wordList) {
+                charConfsList.add(Collections.nCopies(word.size(), lineMean));
+            }
+        }
+
         double bboxXStart = box[0].x;
         double bboxXEnd = box[1].x;
         double bboxYStart = box[0].y;
@@ -118,6 +129,7 @@ public class CalRecBoxes {
 
         List<Point[]> wordBoxList = new ArrayList<>();
         List<String> wordBoxContentList = new ArrayList<>();
+        List<Float> wordConfs = new ArrayList<>();
 
         // 1. 如果要求返回单词级别
         if (returnWordLevel) {
@@ -140,9 +152,11 @@ public class CalRecBoxes {
                 };
                 wordBoxList.add(cell);
                 wordBoxContentList.add(String.join("", word));
+                // 分数 = 自身字符置信度均值
+                wordConfs.add((float) charConfsList.get(i).stream().mapToDouble(Float::doubleValue).average().orElse(0.0));
             }
 
-            return new WordBoxResult(wordBoxContentList, wordBoxList, confList);
+            return new WordBoxResult(wordBoxContentList, wordBoxList, wordConfs);
         }
 
         // 2. 否则走单字/字母级别逻辑
@@ -166,6 +180,8 @@ public class CalRecBoxes {
                 enColList.addAll(wordCol);
                 wordBoxContentList.addAll(word);
             }
+            // 单字级别：置信度逐条跟随内容
+            wordConfs.addAll(charConfsList.get(i));
         }
 
         // 2. 根据中英文各自的平均字符宽度，计算最终坐标
@@ -176,7 +192,7 @@ public class CalRecBoxes {
         wordBoxList.sort(Comparator.comparingDouble(o -> o[0].x));
 
         // 返回结果
-        return new WordBoxResult(wordBoxContentList, wordBoxList, confList);
+        return new WordBoxResult(wordBoxContentList, wordBoxList, wordConfs);
     }
 
     /**

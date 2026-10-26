@@ -270,8 +270,10 @@ public class CTCLabelDecode {
                 // 需要获取分词信息（按字典条目遍历，条目数与 selection 选中位置一一对应）
                 WordInfo wi = this.getWordInfo(charList, selection);
 
-                // 组装 WordBoxInfo：分词分组 + 逐条目置信度，供 CalRecBoxes 计算字/词级坐标
+                // charConfs：每个 word 自身条目的置信度，供 word 按自身字符均值计分（对齐 Python b40c0f8）
+                List<List<Float>> charConfs = groupConfsByWord(charList, confList, wi.wordList);
                 WordBoxInfo wordBoxInfo = new WordBoxInfo((double) textIndex[b].length, wi.wordList, wi.wordColList, wi.stateList, confList);
+                wordBoxInfo.setCharConfs(charConfs);
                 resultList.add(new DecodeResult(decodedText, avgConf, wordBoxInfo));
             }
         }
@@ -392,6 +394,24 @@ public class CTCLabelDecode {
         }
         char ch = entry.charAt(0);
         return ch >= 0x4E00 && ch <= 0x9FA5;
+    }
+
+    /** 跳过空格条目，把行级置信度按 word 顺序归位（对齐 Python b40c0f8 的 char_confs 构建） */
+    private static List<List<Float>> groupConfsByWord(List<String> charList, List<Float> confList, List<List<String>> wordList) {
+        List<List<Float>> charConfs = new ArrayList<>(wordList.size());
+        int entryIdx = 0; // 指向非空格条目的游标
+        for (List<String> word : wordList) {
+            List<Float> confs = new ArrayList<>(word.size());
+            for (int j = 0; j < word.size(); j++) {
+                while (entryIdx < charList.size() && charList.get(entryIdx).trim().isEmpty()) {
+                    entryIdx++;
+                }
+                confs.add(confList.get(entryIdx));
+                entryIdx++;
+            }
+            charConfs.add(confs);
+        }
+        return charConfs;
     }
 
 }

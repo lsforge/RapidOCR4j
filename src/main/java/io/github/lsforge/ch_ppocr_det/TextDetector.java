@@ -18,7 +18,6 @@ public class TextDetector implements AutoCloseable {
 
     private final String limitType;        // "min" / "max" 等限制类型
     private final int limitSideLen;        // 限制边长
-    private DetPreProcess preprocessOp;    // 预处理对象
     public final DBPostProcess postprocessOp;  // 后处理对象
     private final OrtInferSession infer;         // ONNX 推理会话
 
@@ -75,11 +74,11 @@ public class TextDetector implements AutoCloseable {
         int oriHeight = img.rows();
         int oriWidth = img.cols();
 
-        // 初始化预处理操作
-        this.preprocessOp = getPreprocess(Math.max(oriHeight, oriWidth));
+        // 初始化预处理（limitSideLen 对 min/max 均直接生效，对齐 Python f65c7da）
+        DetPreProcess preprocessOp = getPreprocess(this.limitSideLen, this.limitType);
 
         // 执行预处理 => 返回 [1, C, H, W] 扁平张量
-        FlatTensor preproImg = this.preprocessOp.call(img);
+        FlatTensor preproImg = preprocessOp.call(img);
         if (preproImg == null) {
             return Pair.of(null, 0.0);
         }
@@ -101,27 +100,10 @@ public class TextDetector implements AutoCloseable {
     }
 
     /**
-     * 根据图像的最大边长计算预处理对象
-     * 模拟 Python  get_preprocess
-     *
-     * @param maxWh 图像的最大边
-     * @return DetPreProcess
+     * 构造检测预处理对象：limitSideLen 直接透传，不做尺寸分档（对齐 Python f65c7da / PaddleOCR DetResizeForTest）
      */
-    private DetPreProcess getPreprocess(int maxWh) {
-        int actualLimitSideLen;
-        if ("min".equalsIgnoreCase(this.limitType)) {
-            actualLimitSideLen = this.limitSideLen;
-        } else {
-            // if max_wh < 960 => 960; elif <1500 =>1500; else=>2000
-            if (maxWh < 960) {
-                actualLimitSideLen = 960;
-            } else if (maxWh < 1500) {
-                actualLimitSideLen = 1500;
-            } else {
-                actualLimitSideLen = 2000;
-            }
-        }
-        return new DetPreProcess(actualLimitSideLen, this.limitType);
+    static DetPreProcess getPreprocess(int limitSideLen, String limitType) {
+        return new DetPreProcess(limitSideLen, limitType);
     }
 
     /**

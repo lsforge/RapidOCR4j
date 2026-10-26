@@ -53,7 +53,7 @@ public class OcrConfig {
     // 分类模块配置类
     @Data
     public static class ClsConfig {
-        public String modelPath = "models/ch_ppocr_mobile_v2.0_cls_infer.onnx"; // 模型路径
+        public String modelPath = "models/ch_ppocr_mobile_v2.0_cls_infer.onnx"; // 模型路径（PP-OCRv6 套件无独立 cls 模型，沿用 v2.0）
         public int[] clsImageShape = {3, 48, 192}; // 分类输入图像形状
         public int clsBatchNum = 6; // 分类批量处理数（对齐 Python 端默认值）
         public float clsThresh = 0.9f; // 分类阈值

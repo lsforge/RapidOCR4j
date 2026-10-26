@@ -6,6 +6,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.io.File;
 import java.io.IOException;
@@ -29,16 +30,10 @@ class LoadImageError extends Exception {
 }
 
 /**
- * 将输入图片转换为 BGR 格式的 Mat
+ * 将输入图片转换为 BGR 格式的 Mat。
+ * String/Path/byte[] 输入按 EXIF Orientation 转正（对齐 Python exif_transpose）；Mat/BufferedImage 不处理
  */
 public class LoadImage {
-
-    /**
-     * 中文路径判定（imread 不支持中文路径，需走 imdecode）。
-     * 预编译一次，避免每次调用 String.matches 都重新编译正则
-     */
-    private static final java.util.regex.Pattern CHINESE_PATH_PATTERN =
-            java.util.regex.Pattern.compile(".*[\\u4e00-\\u9fa5]+.*");
 
     /**
      * 核心方法
@@ -77,40 +72,22 @@ public class LoadImage {
      * @throws LoadImageError 加载失败抛出异常
      */
     private Mat loadImg(Object img) throws LoadImageError {
-        // 1. 如果是字符串或 Path，认为是图片文件路径
+        // 1. 字符串/Path：统一读字节走 imdecode（兼容中文路径，且可配合 EXIF 转正）
         if (img instanceof String || img instanceof Path) {
             String filePath = img instanceof String ? (String) img : ((Path) img).toString();
             verifyExist(filePath);
-            boolean containsChinese = CHINESE_PATH_PATTERN.matcher(filePath).matches();
-            Mat mat;
-            if (!containsChinese) {
-                mat = Imgcodecs.imread(filePath, Imgcodecs.IMREAD_COLOR);
-            } else {
-                // OpenCV 中的 imread 方法不支持中文路径，使用字节数组byte[]
-                byte[] bytes;
-                try {
-                    bytes = Files.readAllBytes(Paths.get(filePath));
-                } catch (IOException e) {
-                    throw new LoadImageError("无法识别或读取图片: " + filePath);
-                }
-                MatOfByte mob = new MatOfByte(bytes);
-                mat = Imgcodecs.imdecode(mob, Imgcodecs.IMREAD_COLOR);
-            }
-            if (mat.empty()) {
+            byte[] bytes;
+            try {
+                bytes = Files.readAllBytes(Paths.get(filePath));
+            } catch (IOException e) {
                 throw new LoadImageError("无法识别或读取图片: " + filePath);
             }
-            return mat;
+            return decodeWithExif(bytes, "无法识别或读取图片: " + filePath);
         }
 
         // 2. 如果是 byte[]，认为是图片的二进制内容
         if (img instanceof byte[]) {
-            byte[] bytes = (byte[]) img;
-            MatOfByte mob = new MatOfByte(bytes);
-            Mat mat = Imgcodecs.imdecode(mob, Imgcodecs.IMREAD_COLOR);
-            if (mat.empty()) {
-                throw new LoadImageError("无法识别或读取二进制图片数据");
-            }
-            return mat;
+            return decodeWithExif((byte[]) img, "无法识别或读取二进制图片数据");
         }
 
         // 3. 如果已经是 Mat，则直接返回
@@ -123,8 +100,20 @@ public class LoadImage {
             return bufferedImageToMat((BufferedImage) img);
         }
 
-        // 4. 其他类型不支持
+        // 5. 其他类型不支持
         throw new LoadImageError("不支持的图片输入类型: " + img.getClass().getName());
+    }
+
+    /** imdecode 解码并按 EXIF Orientation 转正（解析失败按无 EXIF 处理） */
+    private static Mat decodeWithExif(byte[] bytes, String errorMessage) throws LoadImageError {
+        MatOfByte mob = new MatOfByte(bytes);
+        // IMREAD_IGNORE_ORIENTATION 禁用 OpenCV 隐式 EXIF 转正，统一走下方显式映射（避免二次转正）
+        Mat mat = Imgcodecs.imdecode(mob, Imgcodecs.IMREAD_COLOR | Imgcodecs.IMREAD_IGNORE_ORIENTATION);
+        if (mat.empty()) {
+            throw new LoadImageError(errorMessage);
+        }
+        ExifOrientation.apply(mat, ExifOrientation.parse(bytes));
+        return mat;
     }
 
     /**
@@ -304,8 +293,12 @@ public class LoadImage {
      * @return 转换后的 Mat
      */
     private Mat bufferedImageToMat(BufferedImage bi) {
-        // 先转换为 TYPE_3BYTE_BGR 类型（OpenCV 默认是 BGR）
-        if (bi.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+        // 仅当类型为 TYPE_3BYTE_BGR 且数据区与图像严格等大时才走零拷贝快路径。
+        // getSubimage 的子图与父图共享 DataBuffer（数据区比子图大），
+        // 若直接读取，裁剪偏移会丢失：Mat.put 静默截断后灌入的是父图左上角内容，
+        // 导致识别内容错位甚至返回空结果，因此这类图像必须重绘为独立图像。
+        if (!canReadDirectly(bi)) {
+            // 先转换为 TYPE_3BYTE_BGR 类型（OpenCV 默认是 BGR）
             BufferedImage convertedImg = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
             Graphics2D g = convertedImg.createGraphics();
             g.drawImage(bi, 0, 0, null);
@@ -317,6 +310,20 @@ public class LoadImage {
         Mat mat = new Mat(bi.getHeight(), bi.getWidth(), CvType.CV_8UC3);
         mat.put(0, 0, data);
         return mat;
+    }
+
+    /**
+     * 判断能否直接读取 raster 数据区（零拷贝快路径）：
+     * 类型为 TYPE_3BYTE_BGR，且 DataBuffer 大小与 w*h*3 严格相等
+     * （子图/带行步距的 raster 均不满足，走重绘慢路径）
+     */
+    private static boolean canReadDirectly(BufferedImage bi) {
+        if (bi.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+            return false;
+        }
+        DataBuffer dataBuffer = bi.getRaster().getDataBuffer();
+        return dataBuffer instanceof DataBufferByte
+                && dataBuffer.getSize() == bi.getWidth() * bi.getHeight() * 3;
     }
 
 }

@@ -67,6 +67,44 @@ public class LoadImageTest {
     }
 
     @Test
+    void shouldReadSubimagePixelsNotParentCorner() throws Exception {
+        // 构造一幅内容随位置变化的 3BYTE_BGR 父图，确保不同区域的像素必然不同
+        int pw = 320, ph = 240;
+        BufferedImage parent = new BufferedImage(pw, ph, BufferedImage.TYPE_3BYTE_BGR);
+        byte[] parentData = new byte[pw * ph * 3];
+        for (int y = 0; y < ph; y++) {
+            for (int x = 0; x < pw; x++) {
+                int base = (y * pw + x) * 3;
+                parentData[base] = (byte) ((x * 7) & 0xFF);
+                parentData[base + 1] = (byte) ((y * 5) & 0xFF);
+                parentData[base + 2] = (byte) ((x + y) & 0xFF);
+            }
+        }
+        parent.getRaster().setDataElements(0, 0, pw, ph, parentData);
+
+        int sx = 7, sy = 11, sw = 200, sh = 100;
+        BufferedImage sub = parent.getSubimage(sx, sy, sw, sh);
+        // 前提校验：子图与父图同类型，且数据区大于子图（共享 DataBuffer）
+        Assertions.assertEquals(BufferedImage.TYPE_3BYTE_BGR, sub.getType());
+        Assertions.assertTrue(parent.getRaster().getDataBuffer().getSize() > sw * sh * 3);
+
+        Mat mat = loadImage.call(sub);
+        assertValidColorMat(mat);
+        Assertions.assertEquals(sh, mat.rows());
+        Assertions.assertEquals(sw, mat.cols());
+
+        // 期望值：从父图 DataBuffer 读回实际内存内容，取 (sx, sy) 起步的子区域
+        byte[] parentMemory = ((java.awt.image.DataBufferByte) parent.getRaster().getDataBuffer()).getData();
+        byte[] expectedData = new byte[sw * sh * 3];
+        for (int y = 0; y < sh; y++) {
+            System.arraycopy(parentMemory, ((sy + y) * pw + sx) * 3, expectedData, y * sw * 3, sw * 3);
+        }
+        byte[] actualData = new byte[sw * sh * 3];
+        mat.get(0, 0, actualData);
+        Assertions.assertArrayEquals(expectedData, actualData, "子图转 Mat 必须等于父图对应裁剪区域，而不是父图左上角");
+    }
+
+    @Test
     void shouldRejectUnsupportedType() {
         Exception ex = Assertions.assertThrows(Exception.class, () -> loadImage.call(12345));
         Assertions.assertTrue(ex.getMessage().contains("输入类型不被支持"));

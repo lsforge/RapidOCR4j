@@ -52,6 +52,21 @@ public class TextClassifier implements AutoCloseable {
     }
 
     /**
+     * 长行按模型宽高比裁出水平中段（v2.0 cls 模型读不了整行 squeeze 的长行，对齐 Python 8ac45f4）；
+     * 不超宽时原样返回共享视图，不做拷贝
+     */
+    static Mat cropLongLineMiddle(Mat img, int imgH, int imgW) {
+        int h = img.rows();
+        int w = img.cols();
+        int keepW = (int) Math.ceil(h * (double) imgW / (double) imgH);
+        if (w > keepW) {
+            int left = (w - keepW) / 2;
+            return img.colRange(left, left + keepW);
+        }
+        return img;
+    }
+
+    /**
      * 对输入图像列表进行分类，若识别到 180 度的标签且分数超过阈值，则进行图像旋转。
      *
      * @param imgList 待分类的图像列表（OpenCV Mat 格式）
@@ -162,7 +177,11 @@ public class TextClassifier implements AutoCloseable {
         int imgW = clsImageShape[2];
 
         int h = img.rows();
-        int w = img.cols();
+
+        // 裁出长行中段（不超宽时原样返回）
+        Mat effective = cropLongLineMiddle(img, imgH, imgW);
+        int w = effective.cols();
+
         float ratio = (float) w / (float) h;
 
         // 根据长宽比，判断 resize 后的宽度
@@ -173,7 +192,7 @@ public class TextClassifier implements AutoCloseable {
 
         // 1) 先把图像 resize 到 (resizedW, imgH)
         Mat resizedMat = new Mat();
-        Imgproc.resize(img, resizedMat, new Size(resizedW, imgH));
+        Imgproc.resize(effective, resizedMat, new Size(resizedW, imgH));
 
         // 模型为单通道输入时，BGR 转灰度
         if (imgC == 1 && resizedMat.channels() == 3) {

@@ -11,6 +11,8 @@ public class WordBoxInfo {
     private List<List<Integer>> wordColList;
     private List<String> stateList;
     private List<Float> confList;
+    // 每个 word 自身条目的置信度（不含空格条目），与 wordList 一一对应（对齐 Python WordInfo.char_confs）
+    private List<List<Float>> charConfs;
 
     public WordBoxInfo(Double textIndexLen, List<List<String>> wordList, List<List<Integer>> wordColList, List<String> stateList, List<Float> confList) {
         this.textIndexLen = textIndexLen;
@@ -28,6 +30,7 @@ public class WordBoxInfo {
                 ", wordColList=" + wordColList +
                 ", stateList=" + stateList +
                 ", confList=" + confList +
+                ", charConfs=" + charConfs +
                 '}';
     }
 }
